@@ -6,16 +6,21 @@ constante se debe hacer en consola lo siguiente
  const hu2 = new Huerta(produccion=200)
  const hu3 = new Huerta(produccion=50)
 */
+import plagas.*
 
 class Hogar {
-  const nivelDeMugre
+  var nivelDeMugre
   const confort
   method esBueno() = nivelDeMugre <= (confort/2)
+  method efectoDelAtaque(unaPlaga) {nivelDeMugre = nivelDeMugre + unaPlaga.daño()}
 }
 
 class Huerta {
-  const produccion 
+  var produccion 
   method esBueno() = produccion > nivelMinimo.nivel()
+  method efectoDelAtaque(unaPlaga) {
+    produccion = produccion - (unaPlaga.daño() * 0.1 + if(unaPlaga.transmiteEnfermedades()) 10 else 0)
+  }
 }
 
 object nivelMinimo {
@@ -23,8 +28,13 @@ object nivelMinimo {
 }
 
 class Mascota {
-  const nivelDeSalud
+  var nivelDeSalud
   method esBueno() = nivelDeSalud > 250
+  method efectoDelAtaque(unaPlaga) {
+    if (unaPlaga.transmiteEnfermedades()) {
+      nivelDeSalud = (nivelDeSalud - unaPlaga.daño()).max(0)
+    }
+  } 
 }
 
 class Barrio {
